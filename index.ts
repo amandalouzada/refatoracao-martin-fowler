@@ -21,24 +21,28 @@ export const statement = (invoice: any, plays: any) => {
 
     const format = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 2 }).format;
     for (let perf of invoice.performances) {
-
-        // soma créditos por volume
-        volumeCredits += Math.max(perf.audience - 30, 0);
-
-        // soma um crédito extra para cada dez espectadores de comédia
-        if ("comedy" === playFor(perf).type)
-            volumeCredits += Math.floor(perf.audience / 5);
-
+        volumeCredits = volumeCreditsFor(perf);
         // exibe a linha para esta requisição
         result += ` ${playFor(perf).name}: ${format(amountFor(perf) / 100)} (${perf.audience} seats)\n`;
         totalAmount += amountFor(perf);
+
     }
     result += `Amount owed is ${format(totalAmount / 100)}\n`;
     result += `You earned ${volumeCredits} credits\n`;
     return result;
 }
 
-export const playFor = (aPerformance: any): { name: string; type: string; }  => {
+export const volumeCreditsFor = (aPerformance: { playID: string; audience: number; }): number => {
+    let result = 0;
+    // soma créditos por volume
+    result += Math.max(aPerformance.audience - 30, 0);
+    // soma um crédito extra para cada dez espectadores de comédia
+    if ("comedy" === playFor(aPerformance).type)
+        result += Math.floor(aPerformance.audience / 5);
+    return result;
+}
+
+export const playFor = (aPerformance: { playID: string; audience: number; }): { name: string; type: string; } => {
     return plays[aPerformance.playID];
 }
 

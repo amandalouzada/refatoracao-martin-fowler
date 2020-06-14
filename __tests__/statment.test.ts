@@ -1,4 +1,4 @@
-import { amountFor, statement, playFor } from "../index"
+import { amountFor, statement, playFor, volumeCreditsFor } from "../index"
 
 import plays from '../plays';
 import invoices from '../invoices';
@@ -27,5 +27,9 @@ describe('Statment', () => {
         const aPerformance = { playID: 'hamlet', audience: 55 };
         const result = playFor(aPerformance);
         expect(result).toStrictEqual({ name: 'Hamlet', type: 'tragedy' });
+    })
+    it('volume Credits for', () => {
+        const aPerformance = { playID: 'hamlet', audience: 55 };
+        expect(volumeCreditsFor(aPerformance)).toBe(25);
     })
 })
