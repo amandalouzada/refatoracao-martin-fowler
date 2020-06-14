@@ -1,15 +1,27 @@
 // const plays = require('./plays.json');
 
-import plays from './plays';
-import invoices from './invoices';
+import playsImport from './plays';
+import invoicesImport from './invoices';
+
+
+const plays: { [key: string]: { name: string; type: string; } } = playsImport;
+const invoices: {
+    customer: string;
+    performances: {
+        playID: string;
+        audience: number;
+    }[]
+}[] = invoicesImport;
 
 export const statement = (invoice: any, plays: any) => {
     let totalAmount = 0;
     let volumeCredits = 0;
     let result = `Statement for ${invoice.customer}\n`;
+
+
     const format = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 2 }).format;
     for (let perf of invoice.performances) {
-        const play = plays[perf.playID];
+        const play = playFor(perf);
         let thisAmount = amountFor(perf, play);
 
         // soma créditos por volume
@@ -28,8 +40,12 @@ export const statement = (invoice: any, plays: any) => {
     return result;
 }
 
+export const playFor = (aPerformance: any): { name: string; type: string; }  => {
+    return plays[aPerformance.playID];
+}
 
-export const amountFor = (aPerformance: { playId: string, audience: number }, play: { name: string, type: string }): number => {
+
+export const amountFor = (aPerformance: { playID: string, audience: number }, play: { name: string, type: string }): number => {
     // Calcula o valor para uma apresentação
     let result = 0;
     switch (play.type) {
