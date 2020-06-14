@@ -1,4 +1,4 @@
-import { amountFor, statement, playFor, volumeCreditsFor } from "../index"
+import { amountFor, statement, playFor, volumeCreditsFor, usd } from "../index"
 
 import plays from '../plays';
 import invoices from '../invoices';
@@ -31,5 +31,9 @@ describe('Statment', () => {
     it('volume Credits for', () => {
         const aPerformance = { playID: 'hamlet', audience: 55 };
         expect(volumeCreditsFor(aPerformance)).toBe(25);
+    })
+
+    it('format', () => {
+        expect(usd(65000)).toBe('$650.00');
     })
 })
