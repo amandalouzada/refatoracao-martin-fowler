@@ -6,9 +6,9 @@ import invoices from '../invoices';
 describe('Statment', () => {
     it('amount for', () => {
         const play = { name: 'Hamlet', type: 'tragedy' };
-        const perf = { playID: 'hamlet', audience: 55 };
+        const aPerformance = { playID: 'hamlet', audience: 55 };
         const thisAmount = 65000;
-        expect(amountFor(play, perf)).toBe(thisAmount);
+        expect(amountFor(aPerformance,play)).toBe(thisAmount);
     })
 
     it('statment', () => {
