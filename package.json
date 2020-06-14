@@ -1,0 +1,30 @@
+{
+  "name": "refatoracao-martin-fowler",
+  "version": "1.0.0",
+  "description": "Estudo sobre refatoração baseado no livro Refatoração by Martin Fowler",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon",
+    "build": "tsc",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amandalouzada/refatoracao-martin-fowler.git"
+  },
+  "author": "Amanda Louzada",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/amandalouzada/refatoracao-martin-fowler/issues"
+  },
+  "homepage": "https://github.com/amandalouzada/refatoracao-martin-fowler#readme",
+  "devDependencies": {
+    "@types/jest": "^26.0.0",
+    "@types/node": "^14.0.11",
+    "jest": "^26.0.1",
+    "nodemon": "^2.0.4",
+    "ts-jest": "^26.1.0",
+    "ts-node": "^8.10.2",
+    "typescript": "^3.9.5"
+  }
+}
