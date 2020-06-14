@@ -11,6 +11,8 @@ function statement(invoice: any, plays: any) {
     for (let perf of invoice.performances) {
         const play = plays[perf.playID];
         let thisAmount = 0;
+        console.log(perf);
+        // Calcula o valor para uma apresentação
         switch (play.type) {
             case "tragedy":
                 thisAmount = 40000;
@@ -31,9 +33,11 @@ function statement(invoice: any, plays: any) {
         }
         // soma créditos por volume
         volumeCredits += Math.max(perf.audience - 30, 0);
+
         // soma um crédito extra para cada dez espectadores de comédia
         if ("comedy" === play.type)
             volumeCredits += Math.floor(perf.audience / 5);
+
         // exibe a linha para esta requisição
         result += ` ${play.name}: ${format(thisAmount / 100)} (${perf.audience} seats)\n`;
         totalAmount += thisAmount;
@@ -41,6 +45,11 @@ function statement(invoice: any, plays: any) {
     result += `Amount owed is ${format(totalAmount / 100)}\n`;
     result += `You earned ${volumeCredits} credits\n`;
     return result;
+}
+
+
+export const amountFor = (play: any, performances: any): string => {
+    return '';
 }
 
 
