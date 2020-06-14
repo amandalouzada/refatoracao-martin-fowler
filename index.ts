@@ -20,6 +20,10 @@ export const statement = (invoice: any, plays: any) => {
     for (let perf of invoice.performances) {
         // exibe a linha para esta requisição
         result += ` ${playFor(perf).name}: ${usd(amountFor(perf))} (${perf.audience} seats)\n`;
+      
+    }
+
+    for (let perf of invoice.performances) {
         totalAmount += amountFor(perf);
     }
     
