@@ -23,19 +23,18 @@ export const statement = (invoice: any, plays: any) => {
     }
 
 
-
-    result += `Amount owed is ${usd(calcTotalAmount(invoice.performances))}\n`;
+    result += `Amount owed is ${usd(totalAmount(invoice.performances))}\n`;
     result += `You earned ${totalVolumeCredits()} credits\n`;
     return result;
 }
 
 
-export const calcTotalAmount = (performances: { playID: string; audience: number; }[]) => {
-    let totalAmount = 0;
+export const totalAmount = (performances: { playID: string; audience: number; }[]) => {
+    let result = 0;
     for (let perf of performances) {
-        totalAmount += amountFor(perf);
+        result += amountFor(perf);
     }
-    return totalAmount;
+    return result;
 }
 
 export const totalVolumeCredits = () => {
