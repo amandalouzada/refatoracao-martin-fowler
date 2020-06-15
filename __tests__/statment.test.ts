@@ -33,17 +33,17 @@ describe('Statment', () => {
         totalVolumeCredits: 47
     };
 
-    it('amount for', () => {
-        const aPerformance = {
-            playID: 'hamlet',
-            audience: 55,
-            play: { name: 'Hamlet', type: 'tragedy' }, amount: 0,
-            totalAmount: 0,
-            volumeCredits: 0
-        };
-        const thisAmount = 65000;
-        expect(amountFor(aPerformance)).toBe(thisAmount);
-    })
+    // it('amount for', () => {
+    //     const aPerformance = {
+    //         playID: 'hamlet',
+    //         audience: 55,
+    //         play: { name: 'Hamlet', type: 'tragedy' }, amount: 0,
+    //         totalAmount: 0,
+    //         volumeCredits: 0
+    //     };
+    //     const thisAmount = 65000;
+    //     expect(amountFor(aPerformance)).toBe(thisAmount);
+    // })
 
     it('statment', () => {
         const expectText =
@@ -60,49 +60,49 @@ describe('Statment', () => {
         expect(result).toBe(expectText);
     })
 
-    it('play for', () => {
-        const aPerformance = { playID: 'hamlet', audience: 55 };
-        const result = playFor(aPerformance);
-        expect(result).toStrictEqual({ name: 'Hamlet', type: 'tragedy' });
-    })
+    // it('play for', () => {
+    //     const aPerformance = { playID: 'hamlet', audience: 55 };
+    //     const result = playFor(aPerformance);
+    //     expect(result).toStrictEqual({ name: 'Hamlet', type: 'tragedy' });
+    // })
 
-    it('volume Credits for', () => {
-        const aPerformance = {
-            playID: 'hamlet',
-            audience: 55,
-            play: { name: 'Hamlet', type: 'tragedy' },
-            amount: 0,
-            volumeCredits: 0
-        };
-        expect(volumeCreditsFor(aPerformance)).toBe(25);
-    })
+    // it('volume Credits for', () => {
+    //     const aPerformance = {
+    //         playID: 'hamlet',
+    //         audience: 55,
+    //         play: { name: 'Hamlet', type: 'tragedy' },
+    //         amount: 0,
+    //         volumeCredits: 0
+    //     };
+    //     expect(volumeCreditsFor(aPerformance)).toBe(25);
+    // })
 
-    it('format', () => {
-        expect(usd(65000)).toBe('$650.00');
-    })
+    // it('format', () => {
+    //     expect(usd(65000)).toBe('$650.00');
+    // })
 
-    it('total Volume Credits', () => {
-        const copyStatementData = Object.assign({}, statementData);
-        copyStatementData.totalVolumeCredits = 0;
-        expect(totalVolumeCredits(copyStatementData)).toBe(47);
-    })
+    // it('total Volume Credits', () => {
+    //     const copyStatementData = Object.assign({}, statementData);
+    //     copyStatementData.totalVolumeCredits = 0;
+    //     expect(totalVolumeCredits(copyStatementData)).toBe(47);
+    // })
 
-    it('enrich Performance', () => {
-        const aPerformance = { playID: 'hamlet', audience: 55 };
-        expect(enrichPerformance(aPerformance)).toStrictEqual({
-            playID: 'hamlet',
-            audience: 55,
-            play: { name: 'Hamlet', type: 'tragedy' },
-            amount: 65000,
-            volumeCredits: 25
-        });
-    })
+    // it('enrich Performance', () => {
+    //     const aPerformance = { playID: 'hamlet', audience: 55 };
+    //     expect(enrichPerformance(aPerformance)).toStrictEqual({
+    //         playID: 'hamlet',
+    //         audience: 55,
+    //         play: { name: 'Hamlet', type: 'tragedy' },
+    //         amount: 65000,
+    //         volumeCredits: 25
+    //     });
+    // })
 
-    it('total Amount', () => {
-        const copyStatementData = Object.assign({}, statementData);
-        copyStatementData.totalAmount = 0;
-        expect(totalAmount(copyStatementData)).toBe(173000);
-    })
+    // it('total Amount', () => {
+    //     const copyStatementData = Object.assign({}, statementData);
+    //     copyStatementData.totalAmount = 0;
+    //     expect(totalAmount(copyStatementData)).toBe(173000);
+    // })
     it('create statement data', () => {
         expect(createStatementData(invoices[0])).toStrictEqual(statementData);
     })

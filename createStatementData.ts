@@ -16,7 +16,101 @@ export interface IPlay {
     type: string;
 }
 
+class PerformanceCalculator {
+    public performance: IPerformance;
+    public play: IPlay;
+
+    constructor(aPerformance: IPerformance, aPlay: IPlay) {
+        this.performance = aPerformance;
+        this.play = aPlay;
+    }
+
+    get amount(): number {
+        throw new Error('Subclass responsibility');
+    }
+
+    getVolumeCredits(): number {
+        return Math.max(this.performance.audience - 30, 0);
+    }
+
+    get volumeCredits(): number {
+        return this.getVolumeCredits();
+    }
+}
+
+class TragedyCalculator extends PerformanceCalculator {
+
+    constructor(aPerformance: IPerformance, aPlay: IPlay) {
+        super(aPerformance, aPlay);
+    }
+
+    get amount(): number {
+        let result = 40000;
+        if (this.performance.audience > 30) {
+            result += 1000 * (this.performance.audience - 30);
+        }
+        return result;
+    }
+
+}
+
+class ComedyCalculator extends PerformanceCalculator {
+
+    constructor(aPerformance: IPerformance, aPlay: IPlay) {
+        super(aPerformance, aPlay);
+    }
+    get amount(): number {
+        let result = 30000;
+        if (this.performance.audience > 20) {
+            result += 10000 + 500 * (this.performance.audience - 20);
+        }
+        result += 300 * this.performance.audience;
+        return result;
+    }
+
+    get volumeCredits(): number {
+        return this.getVolumeCredits() + Math.floor(this.performance.audience / 5);
+    }
+}
+
 export const createStatementData = (invoice: any) => {
+
+    const totalAmount = (data: any) => {
+        return data.performances.reduce((total: number, p: any) => total + p.amount, 0);
+    }
+
+    const totalVolumeCredits = (data: any) => {
+        return data.performances.reduce((total: number, p: any) => total + p.volumeCredits, 0);
+    }
+    const createPerformanceCalculator = (aPerformance: IPerformance, aPlay: IPlay): PerformanceCalculator => {
+        const types: { [key: string]: any } = {
+            tragedy: () => new TragedyCalculator(aPerformance, playFor(aPerformance)),
+            comedy: () => new ComedyCalculator(aPerformance, playFor(aPerformance))
+        };
+        if (!types[aPlay.type]) throw new Error(`unknown type ${aPlay.type}`)
+        return types[aPlay?.type]();
+
+    }
+
+
+    const enrichPerformance = (aPerformance: IPerformance): ITotalPerformance => {
+        const calculator = createPerformanceCalculator(aPerformance, playFor(aPerformance));
+        let result: any = Object.assign({}, {
+            ...aPerformance,
+            amount: 0,
+            volumeCredits: 0
+        });
+        result.play = calculator.play;
+        result.amount = calculator.amount;
+        result.volumeCredits = calculator.volumeCredits;
+        return (result as ITotalPerformance);
+    }
+
+    const playFor = (aPerformance: IPerformance): IPlay => {
+        return plays[aPerformance.playID];
+    }
+
+
     let result: any = {
     };
     result.customer = invoice.customer;
@@ -24,69 +118,6 @@ export const createStatementData = (invoice: any) => {
     result.totalAmount = totalAmount(result);
     result.totalVolumeCredits = totalVolumeCredits(result);
     return result
+
 }
 
-export const totalAmount = (data: any) => {
-    let result = 0;
-    for (let perf of data.performances) {
-        result += perf.amount;
-    }
-    return result;
-}
-
-export const totalVolumeCredits = (data: any) => {
-    let result = 0;
-    for (let perf of data.performances) {
-        result += perf.volumeCredits;
-    }
-    return result;
-}
-
-export const enrichPerformance = (aPerformance: IPerformance): ITotalPerformance => {
-    let result: any = Object.assign({}, {
-        ...aPerformance,
-        amount: 0,
-        volumeCredits: 0
-    });
-    result.play = playFor(aPerformance);
-    result.amount = amountFor(result);
-    result.volumeCredits = volumeCreditsFor(result);
-    return (result as ITotalPerformance);
-}
-
-export const playFor = (aPerformance: IPerformance): IPlay => {
-    return plays[aPerformance.playID];
-}
-
-
-export const amountFor = (aPerformance: ITotalPerformance): number => {
-    // Calcula o valor para uma apresentação
-    let result = 0;
-    switch (aPerformance.play.type) {
-        case "tragedy":
-            result = 40000;
-            if (aPerformance.audience > 30) {
-                result += 1000 * (aPerformance.audience - 30);
-            }
-            break;
-
-        case "comedy":
-            result = 30000;
-            if (aPerformance.audience > 20) {
-                result += 10000 + 500 * (aPerformance.audience - 20);
-            }
-            result += 300 * aPerformance.audience;
-            break;
-        default:
-            throw new Error(`unknown type: ${aPerformance.play.type}`);
-    }
-    return result;
-}
-
-export const volumeCreditsFor = (aPerformance: ITotalPerformance): number => {
-    let result = 0;
-    result += Math.max(aPerformance.audience - 30, 0);
-    if ("comedy" === aPerformance?.play.type)
-        result += Math.floor(aPerformance.audience / 5);
-    return result;
-}
