@@ -3,33 +3,52 @@
 import playsImport from './plays';
 import invoicesImport from './invoices';
 
+interface IPerformance {
+    playID: string;
+    audience: number;
+}
+interface IPlay {
+    name: string;
+    type: string;
+}
 
-const plays: { [key: string]: { name: string; type: string; } } = playsImport;
+const plays: { [key: string]: IPlay } = playsImport;
 const invoices: {
     customer: string;
-    performances: {
-        playID: string;
-        audience: number;
-    }[]
+    performances: IPerformance[]
 }[] = invoicesImport;
 
 export const statement = (invoice: any, plays: any) => {
-    let result = `Statement for ${invoice.customer}\n`;
+    const statementData = {
+        customer: invoice.customer,
+        performances: invoice.performances.map(enrichPerformance)
+    };
+    return renderPlainText(statementData)
+}
 
-    for (let perf of invoice.performances) {
-        // exibe a linha para esta requisição
+export const renderPlainText = (data: any): string => {
+    let result = `Statement for ${data.customer}\n`;
+
+    for (let perf of data.performances) {
         result += ` ${playFor(perf).name}: ${usd(amountFor(perf))} (${perf.audience} seats)\n`;
-
     }
-
-
-    result += `Amount owed is ${usd(totalAmount(invoice.performances))}\n`;
+    result += `Amount owed is ${usd(totalAmount(data.performances))}\n`;
     result += `You earned ${totalVolumeCredits()} credits\n`;
     return result;
 }
 
+export const enrichPerformance = (aPerformance: any) => {
+    let result = Object.assign({}, aPerformance);
+    result.play = playFor(result);
+    return result;
+}
 
-export const totalAmount = (performances: { playID: string; audience: number; }[]) => {
+
+export const playFor = (aPerformance: IPerformance): IPlay => {
+    return plays[aPerformance.playID];
+}
+
+export const totalAmount = (performances: IPerformance[]) => {
     let result = 0;
     for (let perf of performances) {
         result += amountFor(perf);
@@ -45,7 +64,6 @@ export const totalVolumeCredits = () => {
     return result;
 }
 
-
 export const usd = (aNumber: number): string => {
     return new Intl.NumberFormat(
         "en-US",
@@ -55,7 +73,7 @@ export const usd = (aNumber: number): string => {
         }
     ).format(aNumber / 100);
 }
-export const volumeCreditsFor = (aPerformance: { playID: string; audience: number; }): number => {
+export const volumeCreditsFor = (aPerformance: IPerformance): number => {
     let result = 0;
     result += Math.max(aPerformance.audience - 30, 0);
     if ("comedy" === playFor(aPerformance).type)
@@ -63,12 +81,7 @@ export const volumeCreditsFor = (aPerformance: { playID: string; audience: numbe
     return result;
 }
 
-export const playFor = (aPerformance: { playID: string; audience: number; }): { name: string; type: string; } => {
-    return plays[aPerformance.playID];
-}
-
-
-export const amountFor = (aPerformance: { playID: string, audience: number }): number => {
+export const amountFor = (aPerformance: IPerformance): number => {
     // Calcula o valor para uma apresentação
     let result = 0;
     switch (playFor(aPerformance).type) {

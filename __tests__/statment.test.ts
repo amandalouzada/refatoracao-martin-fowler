@@ -1,4 +1,4 @@
-import { amountFor, statement, playFor, volumeCreditsFor, usd, totalVolumeCredits, calcTotalAmount } from "../index"
+import { amountFor, statement, playFor, volumeCreditsFor, usd, totalVolumeCredits, renderPlainText, totalAmount } from "../index"
 
 import plays from '../plays';
 import invoices from '../invoices';
@@ -14,6 +14,13 @@ describe('Statment', () => {
         const expectText =
             `Statement for BigCo\n Hamlet: $650.00 (55 seats)\n As You Like It: $580.00 (35 seats)\n Othello: $500.00 (40 seats)\nAmount owed is $1,730.00\nYou earned 47 credits\n`;
         const result = statement(invoices[0], plays);
+        expect(result).toBe(expectText);
+    })
+
+    it('render plain text', () => {
+        const expectText =
+            `Statement for BigCo\n Hamlet: $650.00 (55 seats)\n As You Like It: $580.00 (35 seats)\n Othello: $500.00 (40 seats)\nAmount owed is $1,730.00\nYou earned 47 credits\n`;
+        const result = renderPlainText(invoices[0], plays);
         expect(result).toBe(expectText);
     })
 
@@ -36,7 +43,7 @@ describe('Statment', () => {
     })
 
     it('total Amount', () => {
-        expect(calcTotalAmount(invoices[0].performances)).toBe(173000);
+        expect(totalAmount(invoices[0].performances)).toBe(173000);
     })
 
 
