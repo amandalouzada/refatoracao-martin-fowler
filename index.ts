@@ -19,19 +19,24 @@ export const statement = (invoice: any, plays: any) => {
     for (let perf of invoice.performances) {
         // exibe a linha para esta requisição
         result += ` ${playFor(perf).name}: ${usd(amountFor(perf))} (${perf.audience} seats)\n`;
-      
+
     }
-    
-    let totalAmount = 0;
-    for (let perf of invoice.performances) {
-        totalAmount += amountFor(perf);
-    }
-    
-    result += `Amount owed is ${usd(totalAmount)}\n`;
+
+
+
+    result += `Amount owed is ${usd(calcTotalAmount(invoice.performances))}\n`;
     result += `You earned ${totalVolumeCredits()} credits\n`;
     return result;
 }
 
+
+export const calcTotalAmount = (performances: { playID: string; audience: number; }[]) => {
+    let totalAmount = 0;
+    for (let perf of performances) {
+        totalAmount += amountFor(perf);
+    }
+    return totalAmount;
+}
 
 export const totalVolumeCredits = () => {
     let result = 0;

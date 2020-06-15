@@ -1,4 +1,4 @@
-import { amountFor, statement, playFor, volumeCreditsFor, usd, totalVolumeCredits } from "../index"
+import { amountFor, statement, playFor, volumeCreditsFor, usd, totalVolumeCredits, calcTotalAmount } from "../index"
 
 import plays from '../plays';
 import invoices from '../invoices';
@@ -34,4 +34,10 @@ describe('Statment', () => {
     it('total Volume Credits', () => {
         expect(totalVolumeCredits()).toBe(47);
     })
+
+    it('total Amount', () => {
+        expect(calcTotalAmount(invoices[0].performances)).toBe(173000);
+    })
+
+
 })
